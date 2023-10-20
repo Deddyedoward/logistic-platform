@@ -2,7 +2,7 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
-import { DatabaseModule } from './config/database/database.module';
+import { DatabaseModule } from './common/database/database.module';
 
 @Module({
   imports: [
