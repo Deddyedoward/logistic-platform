@@ -1,12 +1,17 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-
-import { DatabaseModule } from './common/database/database.module';
+import { UsersModule } from './modules/users/users.module';
+import databaseConfig from './config/database.config';
 
 @Module({
   imports: [
-    DatabaseModule
+    ConfigModule.forRoot({
+      load: [databaseConfig]
+    }),
+    UsersModule
   ],
   controllers: [AppController],
   providers: [AppService],

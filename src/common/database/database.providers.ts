@@ -18,7 +18,7 @@ export const databaseProviders = [
                     Users
                 ],
                 synchronize: true,
-                logging: true
+                logging: false
             })
 
             return dataSource.initialize();
