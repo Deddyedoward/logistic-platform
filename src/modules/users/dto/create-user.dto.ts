@@ -6,8 +6,6 @@ export class CreateUserDto {
   @IsString({
     message: 'Firstname is must string.',
   })
-
-  @IsDefined()
   @IsNotEmpty({
     message: 'Firstname is cannot empty.',
   })

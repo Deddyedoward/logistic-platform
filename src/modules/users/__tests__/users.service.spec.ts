@@ -1,21 +1,22 @@
 import { Test } from '@nestjs/testing';
-import { UserService } from '../users.service';
+import { UsersService } from '../users.service';
 import { Users } from '../users.entity';
-import { CreateUserDto } from '../dto/status.dto';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { StatusEnum } from '../../../common/constant/status.enum';
 
 describe('UserService', () => {
-  let userService: UserService;
+  let userService: UsersService;
   let userRepositoryMock: Record<string, jest.Mock>;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       providers: [
-        UserService,
+        UsersService,
         { 
           provide: 'USER_REPOSITORY', 
           useFactory: () => {
             userRepositoryMock = {
-              create: jest.fn(),
+              save: jest.fn(),
               find: jest.fn(),
             };
             return userRepositoryMock;
@@ -24,7 +25,7 @@ describe('UserService', () => {
       ]
     }).compile();
 
-    userService = moduleRef.get<UserService>(UserService);
+    userService = moduleRef.get<UsersService>(UsersService);
   });
 
   describe('create', () => {
@@ -34,23 +35,23 @@ describe('UserService', () => {
             lastname: 'World',
             email: 'hello.world@gmail.com',
             username: 'Admin',
-            password: '123456'
+            password: '123456',
+            status: StatusEnum.PENDING
         }
 
         const result: Users = {
             id: 1,
-            status: 'active',
             ...data,
             created_at: new Date(),
             updated_at: new Date(),
             deleted_at: null
         }
 
-        userRepositoryMock.create.mockReturnValue(result);
+        userRepositoryMock.save.mockReturnValue(result);
         const user = await userService.create(data);
 
         expect(user).toEqual(result);
-        expect(userRepositoryMock.create).toHaveBeenCalledWith(data);
+        expect(userRepositoryMock.save).toHaveBeenCalledWith(data);
     })
   })
 

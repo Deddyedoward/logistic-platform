@@ -1,15 +1,21 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Users } from './users.entity';
+import { CreateUserDto } from './dto/create-user.dto';
+import { AuthUtil } from '../auth/auth.util';
+import { StatusEnum } from '../../common/constant/status.enum';
 
 @Injectable()
 export class UsersService {
   constructor(
     @Inject('USER_REPOSITORY')
     private userRepository: Repository<Users>,
+    private authUtil: AuthUtil
   ) {}
 
-  async create(data: any) {
+  async create(data: CreateUserDto) {
+    data.password = await this.authUtil.hash(data.password);
+    data.status = StatusEnum.PENDING;
     return await this.userRepository.save(data);
   }
 
